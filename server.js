@@ -76,12 +76,23 @@ function checkYtDlp() {
 // ============================================================
 function getVideoInfo(url) {
   return new Promise((resolve, reject) => {
+    const cookiesPath = path.join(__dirname, 'cookies.txt');
     const args = [
       '--dump-json',
       '--no-playlist',
       '--no-warnings',
+      '--extractor-args', 'youtube:player-client=web_music,ios',
       url
     ];
+
+    // Priority 1: Use cookies.txt if it exists (Best for Cloud/Render)
+    if (fs.existsSync(cookiesPath)) {
+      args.push('--cookies', cookiesPath);
+    } 
+    // Priority 2: Use local browser cookies (Best for local Windows testing)
+    else if (!isLinux) {
+      args.push('--cookies-from-browser', 'chrome');
+    }
 
     const proc = spawn(YTDLP_BIN, args);
     let stdout = '';
@@ -202,6 +213,7 @@ async function runConversionJob(jobId, url, quality) {
 // ============================================================
 function downloadAndConvert(url, outPath, quality, job) {
   return new Promise((resolve, reject) => {
+    const cookiesPath = path.join(__dirname, 'cookies.txt');
     const args = [
       '-x',
       '--audio-format', 'mp3',
@@ -210,9 +222,19 @@ function downloadAndConvert(url, outPath, quality, job) {
       '--no-warnings',
       '--progress',
       '--ffmpeg-location', path.dirname(FFMPEG_BIN),
+      '--extractor-args', 'youtube:player-client=web_music,ios',
       '-o', outPath,
       url
     ];
+
+    // Priority 1: Use cookies.txt if it exists
+    if (fs.existsSync(cookiesPath)) {
+      args.push('--cookies', cookiesPath);
+    }
+    // Priority 2: Use local browser cookies
+    else if (!isLinux) {
+      args.push('--cookies-from-browser', 'chrome');
+    }
 
     console.log(`[yt-dlp] Starting: "${YTDLP_BIN}" ${args.join(' ')}`);
     const proc = spawn(YTDLP_BIN, args);
