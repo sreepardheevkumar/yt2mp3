@@ -79,9 +79,10 @@ function getVideoInfo(url) {
     const cookiesPath = path.join(__dirname, 'cookies.txt');
     const args = [
       '--dump-json',
+      '-f', 'ba/b',
       '--no-playlist',
       '--no-warnings',
-      '--extractor-args', 'youtube:player-client=web_music,ios',
+      '--extractor-args', 'youtube:player-client=web,mweb,web_music,ios',
       url
     ];
 
@@ -216,13 +217,14 @@ function downloadAndConvert(url, outPath, quality, job) {
     const cookiesPath = path.join(__dirname, 'cookies.txt');
     const args = [
       '-x',
+      '-f', 'ba/b',
       '--audio-format', 'mp3',
       '--audio-quality', quality === '320' ? '0' : quality === '192' ? '3' : '5',
       '--no-playlist',
       '--no-warnings',
       '--progress',
       '--ffmpeg-location', path.dirname(FFMPEG_BIN),
-      '--extractor-args', 'youtube:player-client=web_music,ios',
+      '--extractor-args', 'youtube:player-client=web,mweb,web_music,ios',
       '-o', outPath,
       url
     ];
