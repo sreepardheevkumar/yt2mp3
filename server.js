@@ -82,7 +82,8 @@ function getVideoInfo(url) {
       '-f', 'ba/b',
       '--no-playlist',
       '--no-warnings',
-      '--extractor-args', 'youtube:player-client=web,mweb,web_music,ios',
+      '--user-agent', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+      '--extractor-args', 'youtube:player-client=web,mweb,web_music,ios;player-skip=webpage,configs',
       url
     ];
 
@@ -224,7 +225,8 @@ function downloadAndConvert(url, outPath, quality, job) {
       '--no-warnings',
       '--progress',
       '--ffmpeg-location', path.dirname(FFMPEG_BIN),
-      '--extractor-args', 'youtube:player-client=web,mweb,web_music,ios',
+      '--user-agent', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+      '--extractor-args', 'youtube:player-client=web,mweb,web_music,ios;player-skip=webpage,configs',
       '-o', outPath,
       url
     ];
